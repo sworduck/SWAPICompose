@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SWAPI Compose</string>
+    <string name="bottom_navigation_search">search</string>
+    <string name="bottom_navigation_favorite">favorite</string>
+    <string name="placeholder_search"></string>
+    <string name="favorite_button">favorite_button</string>
+    <string name="unfavorite_button">unfavorite_button</string>
+</resources>
