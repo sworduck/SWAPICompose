@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -18,26 +17,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bottomnavbardemo.BottomBarScreen
+import com.example.bottomnavbardemo.Screens
 import com.example.bottomnavbardemo.BottomNavGraph
+import com.example.swapicompose.screens.CharacterDetail
+import com.example.swapicompose.screens.FavoriteScreen
+import com.example.swapicompose.screens.SearchScreen
+import com.example.swapicompose.util.CharacterDataUtil.TestCharacterData.testdata
 
-@Preview
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = Screens.Search.route) {
+        composable(Screens.Detail.route) { CharacterDetail(testdata.name,navController) }
+        composable(Screens.Favorite.route) { FavoriteScreen(navController) }
+        composable(Screens.Search.route) { SearchScreen(navController) }
+    }
+
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController, listOf(Screens.Search,Screens.Favorite)) }
     ) {
         BottomNavGraph(navController = navController)
     }
+
+    //SearchScreen(navController)
+
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
-    val screens = listOf(
-        BottomBarScreen.Search,
-        BottomBarScreen.Favorite
-    )
+fun BottomBar(navController: NavHostController, screens: List<Screens>) {
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -54,7 +64,7 @@ fun BottomBar(navController: NavHostController) {
 
 @Composable
 fun RowScope.AddItem(
-    screen: BottomBarScreen,
+    screen: Screens,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {

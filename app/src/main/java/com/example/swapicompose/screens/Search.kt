@@ -13,17 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import com.example.swapicompose.*
 import com.example.swapicompose.R
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun SearchFragmentPreview(){
     SearchScreen()
 }
 
+ */
+
 @Composable
-fun SearchScreen(){
+fun SearchScreen(navController: NavHostController){
 
     Column(Modifier.fillMaxHeight()) {
         SearchBar(Modifier.fillMaxWidth())
@@ -49,7 +54,7 @@ fun SearchScreen(){
                 CharacterData(18, "name2", "1", "1", "1", "1", Type.DEFAULT),
                 CharacterData(19, "name1", "1", "1", "1", "1", Type.DEFAULT),
                 CharacterData(20, "name2", "1", "1", "1", "1", Type.DEFAULT),
-            ), Modifier.fillMaxHeight()
+            ), Modifier.fillMaxHeight(),navController
         )
     }
 }
@@ -95,6 +100,7 @@ fun BottomNavigationPreview() {
     )
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun LazyColumnListPreview() {
@@ -106,14 +112,21 @@ fun LazyColumnListPreview() {
     )
 }
 
+ */
+
 @Composable
-fun ColumnItem(characterData: CharacterData) {
+fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)) {
-        Button(onClick = { expanded = !expanded },
+        Button({ navController.navigate("detail")
+//        {
+//            popUpTo(navController.graph.findStartDestination().id)
+//            launchSingleTop = true
+//        }
+               },
             modifier = Modifier.fillMaxWidth(0.9f)) {
             Text(text = if(expanded) characterData.name else "alo")
         }
@@ -131,10 +144,10 @@ fun ColumnItem(characterData: CharacterData) {
 }
 
 @Composable
-fun LazyColumnList(messages: List<CharacterData>,modifier: Modifier) {
+fun LazyColumnList(messages: List<CharacterData>,modifier: Modifier,navController:NavHostController) {
     LazyColumn(modifier = modifier) {
         items(items = messages) { message ->
-            ColumnItem(message)
+            ColumnItem(message,navController)
         }
     }
 }

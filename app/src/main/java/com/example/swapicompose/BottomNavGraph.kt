@@ -1,7 +1,6 @@
 package com.example.bottomnavbardemo
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,16 +13,16 @@ import com.example.swapicompose.util.CharacterDataUtil
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Search.route
+        startDestination = Screens.Search.route
     ) {
-        composable(route = BottomBarScreen.Search.route) {
-            SearchScreen()
+        composable(route = Screens.Search.route) {
+            SearchScreen(navController)
         }
-        composable(route = BottomBarScreen.Favorite.route) {
-            FavoriteScreen()
+        composable(route = Screens.Favorite.route) {
+            FavoriteScreen(navController)
         }
-        composable(route = BottomBarScreen.Detail.route) {
-            CharacterDetail(CharacterDataUtil.testdata)
+        composable(route = Screens.Detail.route) {
+            CharacterDetail(CharacterDataUtil.testdata.name,navController)
         }
     }
 }
