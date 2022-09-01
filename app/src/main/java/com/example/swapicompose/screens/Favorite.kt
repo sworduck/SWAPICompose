@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.swapicompose.BottomNavigation
 import com.example.swapicompose.CharacterData
 import com.example.swapicompose.Type
 

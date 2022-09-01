@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.example.bottomnavbardemo.Screens
 import com.example.swapicompose.*
 import com.example.swapicompose.R
 
@@ -93,12 +94,15 @@ fun SearchBarPreview() {
 }
 
 //@Preview(showBackground = true)
+/*
 @Composable
 fun BottomNavigationPreview() {
     BottomNavigation(
         Modifier.fillMaxWidth()
     )
 }
+
+ */
 
 /*
 @Preview(showBackground = true)
@@ -117,11 +121,11 @@ fun LazyColumnListPreview() {
 @Composable
 fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
     var expanded by remember { mutableStateOf(false) }
-
+    val a = "4"
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)) {
-        Button({ navController.navigate("detail")
+        Button({ navController.navigate("${Screens.Detail.route}/$a")
 //        {
 //            popUpTo(navController.graph.findStartDestination().id)
 //            launchSingleTop = true

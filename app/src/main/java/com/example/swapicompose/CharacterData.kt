@@ -1,5 +1,6 @@
 package com.example.swapicompose
 
+
 data class CharacterData(
     val id: Int,
     val name: String,

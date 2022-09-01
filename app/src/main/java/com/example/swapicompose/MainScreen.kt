@@ -17,8 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bottomnavbardemo.Screens
 import com.example.bottomnavbardemo.BottomNavGraph
+import com.example.bottomnavbardemo.Screens
 import com.example.swapicompose.screens.CharacterDetail
 import com.example.swapicompose.screens.FavoriteScreen
 import com.example.swapicompose.screens.SearchScreen
@@ -29,11 +29,15 @@ import com.example.swapicompose.util.CharacterDataUtil.TestCharacterData.testdat
 fun MainScreen() {
     val navController = rememberNavController()
 
+    //BottomNavGraph(navController = navController)
+    /*
     NavHost(navController = navController, startDestination = Screens.Search.route) {
-        composable(Screens.Detail.route) { CharacterDetail(testdata.name,navController) }
+        composable(Screens.Detail.route) { CharacterDetail(navController,testdata.name) }
         composable(Screens.Favorite.route) { FavoriteScreen(navController) }
         composable(Screens.Search.route) { SearchScreen(navController) }
     }
+
+     */
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController, listOf(Screens.Search,Screens.Favorite)) }
