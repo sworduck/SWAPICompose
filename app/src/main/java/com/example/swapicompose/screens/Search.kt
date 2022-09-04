@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -138,8 +139,9 @@ fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
             onClick = { expanded = !expanded },
             modifier = Modifier.fillMaxWidth(1f)
         ) {
-            Icon(                                                       //заменить на OutLine.Sta
-                imageVector = if (expanded) Icons.Filled.Favorite else Icons.Filled.Clear,
+            Icon(                                                       //заменить на OutLine.Star
+                painter = if (expanded) painterResource(id = R.drawable.ic_baseline_favorite_24)
+                else painterResource(id = R.drawable.ic_baseline_favorite_border_24),
                 contentDescription = if (expanded) stringResource(R.string.favorite_button)
                 else stringResource(R.string.unfavorite_button)
             )
