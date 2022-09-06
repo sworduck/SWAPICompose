@@ -1,9 +1,11 @@
-package com.example.swapicompose
+package com.example.swapicompose.data.cache.character
 
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.swapicompose.data.CharacterData
+import com.example.swapicompose.utilis.Type
 
 
 @Entity

@@ -9,16 +9,21 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.bottomnavbardemo.Screens
 import com.example.swapicompose.*
 import com.example.swapicompose.R
+import com.example.swapicompose.data.CharacterData
+import com.example.swapicompose.ui.search.SearchViewModel
+import com.example.swapicompose.utilis.Type
 
 /*
 @Preview(showBackground = true)
@@ -30,34 +35,22 @@ fun SearchFragmentPreview(){
  */
 
 @Composable
-fun SearchScreen(navController: NavHostController){
-
-    Column(Modifier.fillMaxHeight()) {
-        SearchBar(Modifier.fillMaxWidth())
-        LazyColumnList(
-            listOf(
-                CharacterData(1, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(2, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(3, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(4, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(5, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(6, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(7, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(8, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(9, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(10, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(11, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(12, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(13, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(14, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(15, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(16, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(17, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(18, "name2", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(19, "name1", "1", "1", "1", "1", Type.DEFAULT),
-                CharacterData(20, "name2", "1", "1", "1", "1", Type.DEFAULT),
-            ), Modifier.fillMaxHeight(),navController
-        )
+fun SearchScreen(
+    navController: NavHostController,
+    vm: SearchViewModel = viewModel(),
+){
+    vm.viewCreated()
+    val users = vm.characterDataList.observeAsState()
+    fun onClickFavorite(characterData: CharacterData) {
+        vm.onClickFavoriteButton(characterData)
+    }
+    if(users.value?.isNotEmpty() == true) {
+        Column(Modifier.fillMaxHeight()) {
+            SearchBar(Modifier.fillMaxWidth())
+            LazyColumnList(
+               vm.characterDataList.value!!, Modifier.fillMaxHeight(), navController,::onClickFavorite
+            )
+        }
     }
 }
 
@@ -120,8 +113,8 @@ fun LazyColumnListPreview() {
  */
 
 @Composable
-fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
-    var expanded by remember { mutableStateOf(false) }
+fun ColumnItem(characterData: CharacterData,navController:NavHostController, onClickFavorite: (CharacterData)-> Unit) {
+    var expanded by remember { mutableStateOf(characterData.type == Type.FAVORITE) }
     val a = "4"
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -133,10 +126,13 @@ fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
 //        }
                },
             modifier = Modifier.fillMaxWidth(0.9f)) {
-            Text(text = if(expanded) characterData.name else "alo")
+            Text(text = characterData.name)
         }
         IconButton(
-            onClick = { expanded = !expanded },
+            onClick = {
+                expanded = !expanded
+                onClickFavorite(characterData)
+                      },
             modifier = Modifier.fillMaxWidth(1f)
         ) {
             Icon(                                                       //заменить на OutLine.Star
@@ -150,10 +146,10 @@ fun ColumnItem(characterData: CharacterData,navController:NavHostController) {
 }
 
 @Composable
-fun LazyColumnList(messages: List<CharacterData>,modifier: Modifier,navController:NavHostController) {
+fun LazyColumnList(messages: List<CharacterData>,modifier: Modifier,navController:NavHostController,onClickFavorite: (CharacterData)-> Unit) {
     LazyColumn(modifier = modifier) {
         items(items = messages) { message ->
-            ColumnItem(message,navController)
+            ColumnItem(message,navController,onClickFavorite)
         }
     }
 }

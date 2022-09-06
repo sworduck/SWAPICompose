@@ -1,4 +1,7 @@
-package com.example.swapicompose
+package com.example.swapicompose.data
+
+import com.example.swapicompose.data.cache.character.CharacterDataBaseEntity
+import com.example.swapicompose.utilis.Type
 
 
 data class CharacterData(

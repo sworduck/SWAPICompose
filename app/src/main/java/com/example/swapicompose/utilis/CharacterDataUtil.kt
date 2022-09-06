@@ -1,7 +1,7 @@
-package com.example.swapicompose.util
+package com.example.swapicompose.utilis
 
-import com.example.swapicompose.CharacterData
-import com.example.swapicompose.Type
+import com.example.swapicompose.data.CharacterData
+
 
 class CharacterDataUtil {
     companion object TestCharacterData{

@@ -1,7 +1,6 @@
 package com.example.swapicompose.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
@@ -17,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.swapicompose.CharacterData
 import com.example.swapicompose.R
-import com.example.swapicompose.util.CharacterDataUtil.TestCharacterData.testdata
+import com.example.swapicompose.data.CharacterData
+import com.example.swapicompose.utilis.CharacterDataUtil.TestCharacterData.testdata
 
 
 @Preview(showBackground = true)

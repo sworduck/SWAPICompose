@@ -9,7 +9,6 @@ import androidx.navigation.navArgument
 import com.example.swapicompose.screens.CharacterDetail
 import com.example.swapicompose.screens.FavoriteScreen
 import com.example.swapicompose.screens.SearchScreen
-import com.example.swapicompose.util.CharacterDataUtil
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
