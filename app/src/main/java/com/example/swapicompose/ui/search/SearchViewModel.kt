@@ -1,8 +1,7 @@
 package com.example.swapicompose.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.swapicompose.MainActivity.Companion.appModule
 import com.example.swapicompose.data.BaseSearchRepository
 import com.example.swapicompose.data.CharacterData
@@ -12,28 +11,38 @@ import com.example.swapicompose.data.cloud.film.FilmCloudList
 import com.example.swapicompose.domain.FavoriteUseCase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import retrofit2.HttpException
+import retrofit2.Response
 import java.net.UnknownHostException
 
 
-class SearchViewModel():ViewModel() {
+class SearchViewModel : ViewModel() {
+
+    private var check = true
 
     private val characterListFromCloud: BaseCloudDataSource = appModule.baseCloudDataSource
     private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
     private val clickFavoriteButton: FavoriteUseCase = appModule.favoriteUseCase
 
-    private val _characterDataList: MutableLiveData<List<CharacterData>> = MutableLiveData()
-    val characterDataList: LiveData<List<CharacterData>> = _characterDataList
+    private val _characterDataList: MutableStateFlow<List<CharacterData>> =
+        MutableStateFlow(emptyList())
+    val characterDataList: StateFlow<List<CharacterData>> = _characterDataList
 
-    private val _errorMessage: MutableLiveData<String> = MutableLiveData()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _errorMessage: MutableStateFlow<String> = MutableStateFlow("")
+    val errorMessage: StateFlow<String> = _errorMessage
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     fun viewCreated() {
         getCharacterList()
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val filmDbList = characterListFromCache.fetchFilmList()
             if (filmDbList.isEmpty()) {
                 val typeCharacter = object : TypeToken<FilmCloudList>() {}.type
@@ -49,24 +58,32 @@ class SearchViewModel():ViewModel() {
     }
 
     private fun getCharacterList() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
             try {
-                _characterDataList.postValue(BaseSearchRepository(characterListFromCloud,
-                    characterListFromCache).fetchCharacterList())
+                if (check) {
+                    check = false
+                    throw HttpException(Response.error<ResponseBody>(500,
+                        ResponseBody.create(MediaType.parse("plain/text"), "some content")))
+                }
+                _characterDataList.value = BaseSearchRepository(characterListFromCloud,
+                    characterListFromCache).fetchCharacterList()
             } catch (e: Exception) {
                 when (e) {
-                    is HttpException -> _errorMessage.postValue("Отсутсвует интернет, попробуйте еще раз")
-                    is UnknownHostException -> _errorMessage.postValue("Отсутсвует интернет, попробуйте еще раз")
-                    else -> _errorMessage.postValue("Отсутсвует интернет, попробуйте еще раз")
+                    is HttpException -> _errorMessage.value =
+                        "Отсутсвует интернет, попробуйте еще раз"
+                    is UnknownHostException -> _errorMessage.value =
+                        "Отсутсвует интернет, попробуйте еще раз"
+                    else -> _errorMessage.value = "Отсутсвует интернет, попробуйте еще раз"
                 }
             }
+            _isLoading.value = false
         }
     }
 
-    fun retryClicked(visible: Boolean) {
-        if (visible) {
-            getCharacterList()
-        }
+    fun retryClicked() {
+        getCharacterList()
+        _errorMessage.value = ""
     }
 
     fun onClickFavoriteButton(characterData: CharacterData) {

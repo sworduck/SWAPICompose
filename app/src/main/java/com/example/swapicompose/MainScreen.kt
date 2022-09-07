@@ -3,7 +3,10 @@ package com.example.swapicompose
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -16,21 +19,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottomnavbardemo.Screens
-import com.example.swapicompose.screens.CharacterDetail
-import com.example.swapicompose.screens.FavoriteScreen
-import com.example.swapicompose.screens.SearchScreen
+import com.example.swapicompose.ui.detail.CharacterDetail
+import com.example.swapicompose.ui.favorite.FavoriteScreen
+import com.example.swapicompose.ui.search.SearchScreen
 
 
 @Composable
 fun MainScreen() {
 
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-
     val navController = rememberNavController()
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    // Control TopBar and BottomBar
     when (navBackStackEntry?.destination?.route) {
         Screens.Search.route -> {
             bottomBarState.value = true
@@ -38,23 +38,17 @@ fun MainScreen() {
         Screens.Favorite.route -> {
             bottomBarState.value = true
         }
-        "${Screens.Detail.route}/{userId}" -> {
+        "${Screens.Detail.route}/{characterId}" -> {
             bottomBarState.value = false
         }
     }
 
-    //BottomNavGraph(navController = navController)
-    /*
-    NavHost(navController = navController, startDestination = Screens.Search.route) {
-        composable(Screens.Detail.route) { CharacterDetail(navController,testdata.name) }
-        composable(Screens.Favorite.route) { FavoriteScreen(navController) }
-        composable(Screens.Search.route) { SearchScreen(navController) }
-    }
-
-     */
-
     com.google.accompanist.insets.ui.Scaffold(
-        bottomBar = { BottomBar(navController = navController, listOf(Screens.Search,Screens.Favorite),bottomBarState) },
+        bottomBar = {
+            BottomBar(navController = navController,
+                listOf(Screens.Search, Screens.Favorite),
+                bottomBarState)
+        },
         content = {
             NavHost(
                 navController = navController,
@@ -66,55 +60,56 @@ fun MainScreen() {
                 composable(route = Screens.Favorite.route) {
                     FavoriteScreen(navController)
                 }
-                composable(route = "${Screens.Detail.route}/{userId}") {
-                    CharacterDetail(navController,it.arguments?.getString("userId") ?: "1")
+                composable(route = "${Screens.Detail.route}/{characterId}") {
+                    CharacterDetail(navController, it.arguments?.getString("characterId") ?: "1")
                 }
             }
         })
-
-    //SearchScreen(navController)
-
 }
 
 @Composable
-fun BottomBar(navController: NavHostController, screens: List<Screens>,bottomBarState:MutableState<Boolean>) {
+fun BottomBar(
+    navController: NavHostController,
+    screens: List<Screens>,
+    bottomBarState: MutableState<Boolean>,
+) {
 
     AnimatedVisibility(visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
         content = {
 
-        BottomNavigation {
+            BottomNavigation {
 
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination?.route
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination?.route
 
-            screens.forEach { screen ->
+                screens.forEach { screen ->
 
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = screen.icon,
-                            contentDescription = "Navigation Icon"
-                        )
-                    },
-                    label = {
-                        Text(text = screen.title)
-                    },
-                    selected = currentDestination==screen.route,
-                    onClick = {
-                        navController.navigate(screen.route){
-                            popUpTo(navController.graph.findStartDestination().id){
-                                saveState = true
+                    BottomNavigationItem(
+                        icon = {
+                            Icon(
+                                imageVector = screen.icon,
+                                contentDescription = "Navigation Icon"
+                            )
+                        },
+                        label = {
+                            Text(text = screen.title)
+                        },
+                        selected = currentDestination == screen.route,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
             }
-        }
-    })
+        })
 }
 
 
