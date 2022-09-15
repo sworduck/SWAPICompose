@@ -20,7 +20,7 @@ import com.example.swapicompose.utilis.Type
 @Composable
 fun FavoriteScreen(
     navController: NavHostController,
-    vm: FavoriteViewModel = viewModel(),
+    vm: FavoriteViewModel,
 ) {
 
     val users by vm.listCharacter.collectAsState()

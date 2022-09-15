@@ -11,6 +11,7 @@ import com.example.swapicompose.data.cloud.film.FilmCloudList
 import com.example.swapicompose.domain.FavoriteUseCase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,15 +21,20 @@ import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-
-class SearchViewModel : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val characterListFromCloud: BaseCloudDataSource,
+    private val characterListFromCache: BaseCacheDataSource,
+    private val clickFavoriteButton: FavoriteUseCase
+) : ViewModel() {
 
     private var check = true
 
-    private val characterListFromCloud: BaseCloudDataSource = appModule.baseCloudDataSource
-    private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
-    private val clickFavoriteButton: FavoriteUseCase = appModule.favoriteUseCase
+    //private val characterListFromCloud: BaseCloudDataSource = appModule.baseCloudDataSource
+    //private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
+    //private val clickFavoriteButton: FavoriteUseCase = appModule.favoriteUseCase
 
     private val _characterDataList: MutableStateFlow<List<CharacterData>> =
         MutableStateFlow(emptyList())

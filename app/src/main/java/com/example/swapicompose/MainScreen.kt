@@ -12,13 +12,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bottomnavbardemo.Screens
 import com.example.swapicompose.ui.detail.CharacterDetail
 import com.example.swapicompose.ui.favorite.FavoriteScreen
 import com.example.swapicompose.ui.search.SearchScreen
@@ -55,13 +55,13 @@ fun MainScreen() {
                 startDestination = Screens.Search.route
             ) {
                 composable(route = Screens.Search.route) {
-                    SearchScreen(navController)
+                    SearchScreen(navController, vm = hiltViewModel())
                 }
                 composable(route = Screens.Favorite.route) {
-                    FavoriteScreen(navController)
+                    FavoriteScreen(navController, vm = hiltViewModel())
                 }
                 composable(route = "${Screens.Detail.route}/{characterId}") {
-                    CharacterDetail(navController, it.arguments?.getString("characterId") ?: "1")
+                    CharacterDetail(navController, it.arguments?.getString("characterId") ?: "1",vm = hiltViewModel())
                 }
             }
         })

@@ -18,16 +18,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.bottomnavbardemo.Screens
+import com.example.swapicompose.Screens
 import com.example.swapicompose.R
 import com.example.swapicompose.data.CharacterData
 import com.example.swapicompose.utilis.Type
 import java.util.*
 
+
+
+
 @Composable
 fun SearchScreen(
     navController: NavHostController,
-    vm: SearchViewModel = viewModel(),
+    vm: SearchViewModel,
 ) {
     vm.viewCreated()
     val users by vm.characterDataList.collectAsState()

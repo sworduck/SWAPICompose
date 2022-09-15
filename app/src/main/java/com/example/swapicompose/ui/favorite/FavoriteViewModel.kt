@@ -7,16 +7,22 @@ import com.example.swapicompose.data.cache.BaseCacheDataSource
 import com.example.swapicompose.data.cache.character.CharacterDataBaseEntity
 import com.example.swapicompose.domain.FavoriteUseCase
 import com.example.swapicompose.utilis.Type
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoriteViewModel : ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    private val characterListFromCache: BaseCacheDataSource,
+    private val clickFavoriteButton: FavoriteUseCase
+) : ViewModel() {
 
-    private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
-    private val clickFavoriteButton: FavoriteUseCase = appModule.favoriteUseCase
+    //private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
+    //private val clickFavoriteButton: FavoriteUseCase = appModule.favoriteUseCase
 
     private val _listCharacter: MutableStateFlow<List<CharacterDataBaseEntity>> =
         MutableStateFlow(emptyList())

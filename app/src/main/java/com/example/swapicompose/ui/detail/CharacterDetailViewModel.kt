@@ -7,15 +7,20 @@ import com.example.swapicompose.data.cache.BaseCacheDataSource
 import com.example.swapicompose.data.cache.character.CharacterDataBaseEntity
 import com.example.swapicompose.data.cache.film.FilmDataBaseEntity
 import com.example.swapicompose.utilis.Type
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharacterDetailViewModel : ViewModel() {
+@HiltViewModel
+class CharacterDetailViewModel @Inject constructor(
+    private val characterListFromCache: BaseCacheDataSource
+) : ViewModel() {
 
-    private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
+    //private val characterListFromCache: BaseCacheDataSource = appModule.baseCacheDataSource
 
     private val _filmListLiveData: MutableStateFlow<List<FilmData>> = MutableStateFlow(emptyList())
     val filmListLiveData: StateFlow<List<FilmData>> = _filmListLiveData

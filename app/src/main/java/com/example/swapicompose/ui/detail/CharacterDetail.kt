@@ -39,7 +39,7 @@ fun DetailFragmentPreview() {
 @Composable
 fun CharacterDetail(
     navController: NavHostController, characterDataId: String,
-    vm: CharacterDetailViewModel = viewModel(),
+    vm: CharacterDetailViewModel,
 ) {
     vm.viewCreated(characterDataId.toInt())
 
