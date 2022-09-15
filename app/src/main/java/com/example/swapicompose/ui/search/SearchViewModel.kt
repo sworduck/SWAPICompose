@@ -2,7 +2,6 @@ package com.example.swapicompose.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.swapicompose.MainActivity.Companion.appModule
 import com.example.swapicompose.data.BaseSearchRepository
 import com.example.swapicompose.data.CharacterData
 import com.example.swapicompose.data.cache.BaseCacheDataSource

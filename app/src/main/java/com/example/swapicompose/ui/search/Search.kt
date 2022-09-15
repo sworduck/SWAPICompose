@@ -1,5 +1,6 @@
 package com.example.swapicompose.ui.search
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,17 +16,55 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.swapicompose.Screens
 import com.example.swapicompose.R
 import com.example.swapicompose.data.CharacterData
+import com.example.swapicompose.ui.favorite.FavoriteScreenTest
+import com.example.swapicompose.ui.theme.SWAPIComposeTheme
+import com.example.swapicompose.utilis.CharacterDataUtil.TestCharacterData.testdata
 import com.example.swapicompose.utilis.Type
 import java.util.*
 
 
+@Preview(showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SearchFragmentPreviewLight() {
+    SWAPIComposeTheme {
+        SearchScreenTest()
+    }
+}
 
+@Preview(showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SearchFragmentPreviewNight() {
+    SWAPIComposeTheme {
+        SearchScreenTest()
+    }
+}
+
+@Composable
+fun SearchScreenTest(){
+
+    val textState = remember { mutableStateOf(TextFieldValue("")) }
+
+    val testList = listOf(testdata, testdata, testdata, testdata,testdata,
+        testdata, testdata, testdata, testdata,testdata,
+        testdata, testdata, testdata, testdata,testdata,
+        testdata, testdata, testdata, testdata,testdata)
+
+    Column(Modifier.fillMaxHeight()) {
+        SearchBar(textState, Modifier.fillMaxWidth())
+        CharacterListTest(
+            textState,
+            testList,
+            Modifier.fillMaxHeight()
+        )
+    }
+}
 
 @Composable
 fun SearchScreen(
@@ -210,6 +249,63 @@ fun CharacterList(
         }
         items(items = filteredMessages) { message ->
             CharacterListItem(message, navController, onClickFavorite)
+        }
+    }
+}
+
+@Composable
+fun CharacterListTest(
+    state: MutableState<TextFieldValue>,
+    messages: List<CharacterData>,
+    modifier: Modifier
+) {
+    var filteredMessages: List<CharacterData>
+    LazyColumn(modifier = modifier) {
+        val searchedText = state.value.text
+        filteredMessages = if (searchedText.isEmpty()) {
+            messages
+        } else {
+            val resultList = ArrayList<CharacterData>()
+            for (country in messages) {
+                if (country.name.lowercase(Locale.getDefault())
+                        .contains(searchedText.lowercase(Locale.getDefault()))
+                ) {
+                    resultList.add(country)
+                }
+            }
+            resultList
+        }
+        items(items = filteredMessages) { message ->
+            CharacterListItemTest(message)
+        }
+    }
+}
+
+@Composable
+fun CharacterListItemTest(
+    characterData: CharacterData
+) {
+    var expanded by remember { mutableStateOf(false) }
+    expanded = characterData.type == Type.FAVORITE
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 8.dp)) {
+        Button({ },
+            modifier = Modifier.fillMaxWidth(0.9f)) {
+            Text(text = characterData.name)
+        }
+        IconButton(
+            onClick = {
+                expanded = !expanded
+            },
+            modifier = Modifier.fillMaxWidth(1f)
+        ) {
+            Icon(
+                painter = if (expanded) painterResource(id = R.drawable.ic_baseline_favorite_24)
+                else painterResource(id = R.drawable.ic_baseline_favorite_border_24),
+                contentDescription = if (expanded) stringResource(R.string.favorite_button)
+                else stringResource(R.string.unfavorite_button)
+            )
         }
     }
 }

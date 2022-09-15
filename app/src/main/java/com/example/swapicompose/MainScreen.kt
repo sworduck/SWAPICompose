@@ -1,5 +1,6 @@
 package com.example.swapicompose
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -12,6 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -20,9 +22,31 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swapicompose.ui.detail.CharacterDetail
+import com.example.swapicompose.ui.detail.CharacterDetailTest
 import com.example.swapicompose.ui.favorite.FavoriteScreen
+import com.example.swapicompose.ui.favorite.FavoriteScreenTest
 import com.example.swapicompose.ui.search.SearchScreen
+import com.example.swapicompose.ui.search.SearchScreenTest
+import com.example.swapicompose.ui.theme.SWAPIComposeTheme
+import com.example.swapicompose.utilis.CharacterDataUtil.TestCharacterData.testdata
 
+//тут Detail в bottombar чтобы не передавать navController
+//тестовым представлениям
+@Preview(showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun MainScreenPreviewLight() {
+    SWAPIComposeTheme {
+        MainScreenTest()
+    }
+}
+
+@Preview(showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun MainScreenPreviewNight() {
+    SWAPIComposeTheme {
+        MainScreenTest()
+    }
+}
 
 @Composable
 fun MainScreen() {
@@ -112,6 +136,37 @@ fun BottomBar(
         })
 }
 
+@Composable
+fun MainScreenTest() {
+
+    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+    val navController = rememberNavController()
+
+    com.google.accompanist.insets.ui.Scaffold(
+        bottomBar = {
+            //тут Detail в bottombar чтобы не передавать navController
+            //тестовым представлениям
+            BottomBar(navController = navController,
+                listOf(Screens.Search, Screens.Favorite,Screens.Detail),
+                bottomBarState)
+        },
+        content = {
+            NavHost(
+                navController = navController,
+                startDestination = Screens.Search.route
+            ) {
+                composable(route = Screens.Search.route) {
+                    SearchScreenTest()
+                }
+                composable(route = Screens.Favorite.route) {
+                    FavoriteScreenTest()
+                }
+                composable(route = Screens.Detail.route) {
+                    CharacterDetailTest(testdata)
+                }
+            }
+        })
+}
 
 
 

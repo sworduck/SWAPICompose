@@ -1,13 +1,12 @@
 package com.example.swapicompose.ui.detail
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
@@ -26,14 +25,24 @@ import com.example.swapicompose.data.FilmData
 import com.example.swapicompose.data.cache.character.CharacterDataBaseEntity
 import com.example.swapicompose.ui.theme.Blue
 import com.example.swapicompose.ui.theme.Navy
+import com.example.swapicompose.ui.theme.SWAPIComposeTheme
 import com.example.swapicompose.utilis.CharacterDataUtil.TestCharacterData.testdata
 import com.example.swapicompose.utilis.Type
 
-
-@Preview(showBackground = true)
+@Preview(showBackground = true,uiMode = UI_MODE_NIGHT_NO)
 @Composable
-fun DetailFragmentPreview() {
-    CharacterDetailTest(testdata)
+fun DetailFragmentPreviewLight() {
+    SWAPIComposeTheme {
+        CharacterDetailTest(testdata)
+    }
+}
+
+@Preview(showBackground = true,uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun DetailFragmentPreviewNight() {
+    SWAPIComposeTheme {
+        CharacterDetailTest(testdata)
+    }
 }
 
 @Composable
@@ -70,7 +79,7 @@ fun CharacterDetail(
             Text("Name: ${character.name} \nMass: ${character.mass}\nHeight: ${character.height}",
                 Modifier
                     .background(
-                        Navy, RectangleShape
+                        MaterialTheme.colors.primary, RectangleShape
                     )
                     .fillMaxWidth())
 
@@ -116,20 +125,24 @@ fun CharacterDetailTest(testcharacterData: CharacterData) {
         .fillMaxSize()
         .padding(5.dp)) {
 
-        Text("${testcharacterData.name} моё имя\n ${testcharacterData.name} моё имя\n " +
-                "${testcharacterData.name} моё имя",
-            Modifier
-                .background(
-                    Navy, RectangleShape
-                )
+        Text("Name: ${testcharacterData.name}\nMass: ${testcharacterData.mass}\n " +
+                "Height: ${testcharacterData.height}",
+            Modifier.background(MaterialTheme.colors.primary)
                 .fillMaxWidth())
 
-        val list = listOf(stringResource(R.string.testRow1), stringResource(R.string.testRow2),
+        val listName = listOf("A New Hope", "The Empire Strikes Back", "Return of the Jedi")
+        val listDescription = listOf(stringResource(R.string.testRow1), stringResource(R.string.testRow2),
             stringResource(R.string.testRow3))
 
         LazyRow {
-            items(items = list) { item ->
-                RowItem("название фильма", item)
+            item {
+                RowItem(listName[0], listDescription[0])
+            }
+            item {
+                RowItem(listName[1], listDescription[1])
+            }
+            item {
+                RowItem(listName[2], listDescription[2])
             }
         }
 
@@ -159,7 +172,7 @@ fun RowItem(title: String, openingCrawl: String) {
 
     Column(Modifier
         .padding(horizontal = 5.dp, vertical = 10.dp)
-        .background(Navy, RectangleShape)
+        .background(MaterialTheme.colors.primary, RectangleShape)
         .width(200.dp)) {
 
         Text(text = title,

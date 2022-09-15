@@ -1,7 +1,6 @@
 package com.example.swapicompose.ui.favorite
 
 import androidx.lifecycle.ViewModel
-import com.example.swapicompose.MainActivity.Companion.appModule
 import com.example.swapicompose.data.CharacterData
 import com.example.swapicompose.data.cache.BaseCacheDataSource
 import com.example.swapicompose.data.cache.character.CharacterDataBaseEntity
